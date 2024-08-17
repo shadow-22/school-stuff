@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<employees>
+	<employee title="computer scientist">
+		<name>Periklis</name>
+		<salary>$100000</salary>
+	</employee>
+	<employee title="mathematician">
+		<name>Giorgos</name>
+		<salary>$150000</salary>
+	</employee>
+	<employee title="footballer">
+		<name>Manos</name>
+		<salary>$57500</salary>
+	</employee>
+</employees>

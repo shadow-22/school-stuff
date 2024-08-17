@@ -1,0 +1,273 @@
+ORG 0820H         ;/еййимгсг апо аутг тг хесг циати ои хесеис 0810-0815г
+                  ;/вягсилопоиоумтаи циа тг кеитоуяциа тгс охомгс 7-SEG.
+
+IN 10H            ;Aпемеяцопоигсг пяостасиас лмглгс.
+
+START:
+LXI H,0810H       ;диеухумсг лмглгс 0810г  
+
+1ST_LINE:         ;екецвос циа патгла пкгйтяоу апо тгм 1г цяаллг.
+MVI A,FEH
+STA 2800H
+LDA 1800H         ;амацмысг дедолемым стгкым.
+MVI B,07H         ;/аполомысг 3 LSB.     
+ANA B             ;/
+CPI 06H           ;патгхгйе то 1О пкгйтяо;
+JZ INSTR_STEP_CODE
+CPI 05H           ;патгхгйе то 2О пкгтяо;
+JZ FETCH_PC_C
+;CPI 03H          ;/патгхгйе то 3О пкгйтяо;
+                  ;/еды еимаи то HDWR_STEP поу дем вяеиафетаи.
+
+2ND_LINE:         ;/циа та упокоипа пкгйтяа о екецвос ам патгхгйам циметаи  
+                  ;/ле амтистоиво тяопо поу ециме циа аута тгс 1ГР цяаллгс.    
+MVI A,FDH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ RUN_C
+CPI 05H
+JZ FETCH_REG_C
+CPI 03H
+JZ FETCH_ADRS_C
+
+3RD_LINE:
+MVI A,FBH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ 0_C
+CPI 05H
+JZ STORE/INCR_C
+CPI 03H
+JZ DECR_C
+
+4TH_LINE:
+MVI A,F7H
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ 1_C
+CPI 05H
+JZ 2_C
+CPI 03H
+JZ 3_C
+
+5TH_LINE:
+MVI A,EFH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ 4_C
+CPI 05H
+JZ 5_C
+CPI 03H
+JZ 6_C
+
+6TH_LINE:
+MVI A,DFH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ 7_C
+CPI 05H
+JZ 8_C
+CPI 03H
+JZ 9_C
+
+7TH_LINE:
+MVI A,BFH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ A_C
+CPI 05H
+JZ B_C
+CPI 03H
+JZ C_C
+
+8TH_LINE:
+MVI A,7FH
+STA 2800H
+LDA 1800H
+MVI B,07H
+ANA B
+CPI 06H
+JZ D_C
+CPI 05H
+JZ E_C
+CPI 03H
+JZ F_C
+
+JMP DISPLAY     ;/ам дем патгхгйе йамема пкгйтяо елжамисе стгм охомг 
+                ;/то пяогцоулемо. (аккацг йатастасгс охомгс ломо сто 
+                ;/патгла йапоиоу пкгйтяоу.) 
+
+INSTR_STEP_CODE: ;/топохетгсг йыдийоу пкгйтяоу стг лмглг.
+                 ;/(амтистоивH диадийасиа циа ока та пкгйтяа.)
+MVI M,06H        ;топохетгсг сто 1О ьгжио тгс охомгс том 1О аяихло тоу йыдийоу.
+INX H            ;аунгсг тгс диеухумсгс лмглгс йата 1.
+MVI M,08H        ;топохетгсг сто 2О ьгжио тгс охомгс том 2О аяихло тоу йыдийоу.
+JMP DISPLAY      ;диадийасиа елжамисгс апотекеслатос стгм охомг.
+
+FETCH_PC_C:
+MVI M,05H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+RUN_C:
+MVI M,04H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+FETCH_REG_C:
+MVI M,00H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+FETCH_ADRS_C:
+MVI M,02H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+0_C:
+MVI M,00H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+STORE/INCR_C:
+MVI M,03H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+
+DECR_C:
+MVI M,01H
+INX H
+MVI M,08H
+JMP DISPLAY
+
+
+1_C:
+MVI M,01H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+2_C:
+MVI M,02H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+3_C:
+MVI M,03H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+4_C:
+MVI M,04H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+5_C:
+MVI M,05H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+6_C:
+MVI M,06H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+7_C:
+MVI M,07H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+8_C:
+MVI M,08H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+9_C:
+MVI M,09H
+INX H
+MVI M,00H
+JMP DISPLAY
+
+A_C:
+MVI M,0AH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+B_C:
+MVI M,0BH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+C_C:
+MVI M,0CH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+D_C:
+MVI M,0DH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+E_C:
+MVI M,0EH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+F_C:
+MVI M,0FH
+INX H
+MVI M,00H
+JMP DISPLAY
+
+DISPLAY:     
+LXI H,0812H       ;/топохетгсг йемоу стис 4 текеутаиес хесеис тгс охомгс.
+MVI M,10H
+INX H
+MVI M,10H
+INX H
+MVI M,10H
+INX H
+MVI M,10H         ;/
+LXI D,0810H       
+CALL DCD
+CALL STDM
+JMP START         ;сумевгс кеитоуяциа.
+
+END

@@ -1,0 +1,92 @@
+#include <avr/io.h>  // libray of input/output
+
+volatile uint8_t x;      // input variable
+volatile uint8_t stotem1;
+volatile uint8_t stotem2; 
+volatile uint8_t stotem3;
+volatile uint8_t store4;
+volatile uint8_t store5;         
+volatile uint8_t satem1;
+volatile uint8_t satem2;
+volatile uint8_t satem3;
+volatile uint8_t save4;
+volatile uint8_t f0;
+volatile uint8_t f1;
+volatile uint8_t f2;
+
+int main(void)
+{
+   DDRA=0x07;  // porta(3 lsbs) is for output
+   DDRC=0xc0;  // portc(5 lsbs) is for input
+
+while(1){      // infinite loop
+   x=PINC; 
+//---------------------------------
+// FUNCTION F0     
+   stotem1=x&0x1;             // stotem1="store temp1", stotem1=A
+   stotem2=x&0x2;             // stotem=B
+   stotem2=stotem2>>1;          
+   satem1=stotem1&&stotem2;   // satem1="save temp 1", AB(A AND B)
+
+   stotem1=x&0x4;             // stotem1=C
+   stotem1=stotem3>>2;
+   satem2=stotem2&&stotem1;   // satem2=BC(B AND C)
+
+   f0=satem1||satem2;         // F0=satem1 OR satem2
+
+   stotem2=x&0x8;              // stotem2=D
+   stotem2=stotem2>>3;
+   satem1=stotem2&&stotem1;   // satem1=CD(C AND D)
+
+   f0=f0||satem1;         // F0=(AB OR BC OR CD)
+    
+   stotem1=x&0x10;
+   stotem1=stotem1>>4;
+   satem1=stotem2&&stotem1;
+
+   f0=f0||satem1;
+
+   f0=~f0;
+//--------------------------------
+// FUNCTION F1
+   stotem1=x&0x1;
+   stotem2=x&0x2;
+   stotem2=stotem2>>1;
+
+   f1=stotem1&&stotem2;
+
+   stotem1=x&0x4;
+   stotem1=stotem1>>2;
+
+   f1=f1&&stotem1;
+
+   stotem1=x&0x8;
+   stotem1=stotem1>>3;
+
+   f1=f1&&stotem1;
+
+   stotem1=x&0x10;
+   stotem1=stotem1>>4;
+
+   f1=f1&&stotem1;
+   
+   stotem1=x&0x8;
+   stotem1=stotem1>>3;
+
+   stotem2=x&0x10;
+   stotem2=stotem2>>4;
+   stotem2=~stotem2;
+   
+   stotem1=stotem1&&stotem2;  //kapoio provlhma yparxei edw me to and kai to prohgoumeno compliment...
+
+   f1=f1||stotem1;
+//--------------------------------
+// FUNCTION F2
+   f2=f0||f1;
+
+
+
+}
+return 0;
+}
+

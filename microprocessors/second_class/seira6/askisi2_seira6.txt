@@ -1,0 +1,81 @@
+.include "m16def.inc"
+.def temp1=r16
+.def temp2=r17
+.def led=r18
+.def constant=r19
+reset:
+ldi r24,low(ramend)
+out spl,r24
+ldi r24,high(ramend)
+out sph,r24
+
+ser temp1
+out ddra,temp1
+
+ldi temp1,0x00
+out ddrb,temp1
+
+main:
+in temp1,pinb
+andi temp1,0x0f
+
+in temp2,pinb
+andi temp2,0xf0
+;ldi temp2,temp2>>4
+clc
+ror temp2
+ror temp2
+ror temp2
+ror temp2
+clc
+
+cpi temp1,0x00
+brne on
+clr led
+out porta,led
+jmp main
+
+on:
+ser led
+out porta,led
+ldi constant,100
+mul temp1,constant
+mov r24,r0
+mov r25,r1
+rcall wait_msec
+
+cpi temp2,0x00
+breq main
+
+off:
+clr led
+out porta,led
+mul temp2,constant
+mov r24,r0
+mov r25,r1
+rcall wait_msec
+
+jmp main
+
+;*******************
+; delay
+wait_msec:
+push r24
+push r25
+ldi r24,low(998)
+ldi r25,high(998)
+rcall wait_usec
+pop r25
+pop r24
+sbiw r24,1
+brne wait_msec
+ret
+
+wait_usec:
+sbiw r24,1
+nop
+nop
+nop
+nop
+brne wait_usec
+ret

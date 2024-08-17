@@ -1,0 +1,42 @@
+VIEWS:
+
+CREATE VIEW Patient_View AS 
+         SELECT PatientId,FirstName,LastName,Town,StreetNumber,Number,PostalNumber,Age,DoctorId
+         FROM Patient
+
+CREATE VIEW Doctor_View AS 
+         SELECT DoctorId,FirstName,LastName,Speciality,ExperienceYears
+         FROM Doctor
+
+CREATE VIEW Drug_View AS 
+         SELECT DrugId,Name,Formula,PharmaceuticalCompanyId
+         FROM Drug
+
+CREATE VIEW Pharmacy_View AS 
+         SELECT PharmacyId,Name,Town,StreetName,Number,PostalCode,PhoneNumber
+         FROM Pharmacy
+
+CREATE VIEW Company_View AS 
+         SELECT PharmaceuticalCompanyId,Name,PhoneNumber
+         FROM PharmaceuticalCompany
+
+CREATE VIEW Prescription_View AS 
+         SELECT PatientId,DoctorId,DrugId,Date,Quantity
+         FROM Prescription
+
+CREATE VIEW Sell_View AS 
+         SELECT PharmacyId,DrugId,Price
+         FROM Sell
+
+CREATE VIEW Contract_View AS 
+         SELECT PharmacyId,PharmaceuticalCompanyId,StartDate,EndDate,Supervisor
+         FROM Contract  
+
+Σε κάθε όψη βλέπουμε όλα τα περιοχόμενα(θα μπορούσαμε να χρησιμοποιήσουμε και τον αστερίσκο), έτσι βλέπουμε γρήγορα 
+τις αλλαγές μετά από κάθε insert, delete, update etc.
+  
+
+
+
+
+

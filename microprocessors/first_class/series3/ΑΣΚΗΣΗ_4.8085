@@ -1,0 +1,331 @@
+ORG 0808H        ;ои хесеис 0800-0801г вягсилопоиоумтаи циа апохгйеусг дедолемым
+IN 10H           ;апемеяцопоигсг пяостасиас лмглгс
+
+START:
+1ST_LINE:         ;екецвос циа патгла пкгйтяоу апо тгм 1г цяаллг.
+MVI A,FEH
+STA 2800H
+LDA 1800H         ;амацмысг дедолемым стгкым.
+MVI D,07H         ;/аполомысг 3 LSB.     
+ANA D             ;/
+CPI 06H           ;патгхгйе то 1О пкгйтяо;
+JZ INSTR_STEP_CODE
+CPI 05H           ;патгхгйе то 2О пкгтяо;
+JZ FETCH_PC_C
+;CPI 03H          ;/патгхгйе то 3О пкгйтяо;
+                  ;/еды еимаи то HDWR_STEP поу дем вяеиафетаи.
+
+2ND_LINE:         ;/циа та упокоипа пкгйтяа о екецвос ам патгхгйам циметаи  
+                  ;/ле амтистоиво тяопо поу ециме циа аута тгс 1ГР цяаллгс.    
+MVI A,FDH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ RUN_C
+CPI 05H
+JZ FETCH_REG_C
+CPI 03H
+JZ FETCH_ADRS_C
+
+3RD_LINE:
+MVI A,FBH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ 0_C
+CPI 05H
+JZ STORE/INCR_C
+CPI 03H
+JZ DECR_C
+
+4TH_LINE:
+MVI A,F7H
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ 1_C
+CPI 05H
+JZ 2_C
+CPI 03H
+JZ 3_C
+
+5TH_LINE:
+MVI A,EFH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ 4_C
+CPI 05H
+JZ 5_C
+CPI 03H
+JZ 6_C
+
+6TH_LINE:
+MVI A,DFH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ 7_C
+CPI 05H
+JZ 8_C
+CPI 03H
+JZ 9_C
+
+7TH_LINE:
+MVI A,BFH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ A_C
+CPI 05H
+JZ B_C
+CPI 03H
+JZ C_C
+
+8TH_LINE:
+MVI A,7FH
+STA 2800H
+LDA 1800H
+MVI D,07H
+ANA D
+CPI 06H
+JZ D_C
+CPI 05H
+JZ E_C
+CPI 03H
+JZ F_C
+
+CALL DISPLAY    ;ам дем патгхгйе йамема мео пкгйтяо елжамисе стгм охомг том
+                ;йыдийоу тоу пкгйтяоу поу патгхгйе текеутаиа жояа (еимаи 
+JMP START       ;апохгйеулемос стг лмглг). епамакабе тг саяысг тоу пкгйтяокоциоу.
+
+
+INSTR_STEP_CODE:  
+LXI H,0800H       ;/апохгйеусг стг лмглг тоу йыдийоу тоу пкгйтяоу.
+MVI M,82H         ;/йахе ьгжио тоу йыдийоу апохгйеуетаи ле йатаккгкг лояжг       
+INX H             ;/ысте стг сумевеиа ма одгцгхеи апеухеиас стгм поята 
+MVI M,80H         ;/тлглатым (SEGMENTS PORT).
+CALL DISPLAY      ;елжамисг йыдийоу ьгжиоу.
+JMP START         ;ей меоу саяысг пкгйтяокоциоу.
+
+
+FETCH_PC_C:       ;амтистоивг диадийасиа йаи циа та упокоипа пкгйтяа.
+LXI H,0800H       
+MVI M,92H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+RUN_C:
+LXI H,0800H
+MVI M,99H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+FETCH_REG_C:
+LXI H,0800H
+MVI M,C0H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+FETCH_ADRS_C:
+LXI H,0800H
+MVI M,A4H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+0_C:
+LXI H,0800H
+MVI M,C0H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+STORE/INCR_C:
+LXI H,0800H
+MVI M,B0H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+
+DECR_C:
+LXI H,0800H
+MVI M,F9H
+INX H
+MVI M,80H
+CALL DISPLAY
+JMP START
+
+
+1_C:
+LXI H,0800H
+MVI M,F9H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+2_C:
+LXI H,0800H
+MVI M,A4H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+3_C:
+LXI H,0800H
+MVI M,B0H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+4_C:
+LXI H,0800H
+MVI M,99H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+5_C:
+LXI H,0800H
+MVI M,92H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+6_C:
+LXI H,0800H
+MVI M,82H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+7_C:
+LXI H,0800H
+MVI M,F8H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+8_C:
+LXI H,0800H
+MVI M,80H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+9_C:
+LXI H,0800H
+MVI M,90H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+A_C:
+LXI H,0800H
+MVI M,88H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+B_C:
+LXI H,0800H
+MVI M,83H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+C_C:
+LXI H,0800H
+MVI M,A7H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+D_C:
+LXI H,0800H
+MVI M,A1H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+E_C:
+LXI H,0800H
+MVI M,86H
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+F_C:
+LXI H,0800H
+MVI M,8EH
+INX H
+MVI M,C0H
+CALL DISPLAY
+JMP START
+
+
+
+DISPLAY:        ;яоутима елжамисгс йыдийоу стгм охомг 7-SEG
+MVI A,FFH       ;/сбгсило тлглатым, ысте дедолема апо то пяогцоулемо ьгжио ма
+STA 3800H       ;/лгм апеийомифомтаи стицлиаиа.
+
+MVI A,01H       ;/хесг поятас саяысгс, ысте ма амаьеи то 1О ьгжио тгс охомгс.
+STA 2800H       ;/
+LXI H,0800H     ;\топохетгсг тоу 1ОУ ьгжиоу тоу йыдийоу стгм поята тлглатым.
+MOV A,M         ;\(гдг бяисйетаи стгм йатаккгкг лояжг.)
+STA 3800H       ;\
+
+MVI A,FFH       ;/сбгсило тлглатым, ысте дедолема апо то пяогцоулемо ьгжио ма
+STA 3800H       ;/лгм апеийомифомтаи стицлиаиа.
+
+MVI A,02H       ;/хесг поятас саяысгс, ысте ма амаьеи то 2О ьгжио тгс охомгс.
+STA 2800H       ;/
+INX H           ;\топохетгсг тоу 1ОУ ьгжиоу тоу йыдийоу стгм поята тлглатым.
+MOV A,M         ;\(гдг бяисйетаи стгм йатаккгкг лояжг.)
+STA 3800H       ;\
+
+MVI A,FFH       ;/сбгсило тлглатым, ысте дедолема апо то пяогцоулемо ьгжио ма 
+STA 3800H       ;/
+
+LXI H,0800H     ;/епамажояа тгс диеухумсгс лмглгс стг сыстг хесг, ысте ма 
+                ;/елжамисеи нама то 1О ьгжио тоу йыдийоу.
+RET
+
+
+END

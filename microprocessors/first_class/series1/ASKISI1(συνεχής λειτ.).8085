@@ -1,0 +1,24 @@
+ORG 0800H
+
+START:
+MVI C,08H
+LDA 2000H
+
+ADDR1:
+RAL
+JC ADDR2
+DCR C
+JNZ ADDR1
+
+ADDR2:
+MOV A,C
+CMA
+STA 3000H
+JMP START
+
+END
+
+;циа сумевг кеитоуяциа, локис елжамистеи то апотекесла стгм енодо (STA 3000H)
+;ле емтокг акалтос(JMP START) аявийопоиоуле ей меоу том летягтг C KAI калбамоуле меа еисодо
+
+

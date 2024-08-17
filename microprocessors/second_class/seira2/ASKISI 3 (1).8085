@@ -1,0 +1,48 @@
+ORG 0800H
+MVI D,00H ;йатавыягтгс летягтг
+LXI B,0064H
+IN 10H ;апемеяцопоигсг пяостасиас лмглгс
+LXI H,0900H ;диеухумсг лмглгс
+
+ENABLE:
+DI 
+LDA 2000H ;екецвос псь
+ANI 80H
+CPI 80H
+JNZ COUNTER 
+MVI A,0DH ;емеяцопоигсг ласйас диайопгс циа тгм RST6.5
+SIM
+EI
+
+
+
+
+COUNTER: 
+MOV A,D
+ANI 0FH
+CMA
+STA 3000H ;елжамисг тым 4 ксь
+CALL DELB ;йахустеягсг 1/10sec
+INR D
+JMP ENABLE
+
+INTR_ROUTINE:
+CALL IC
+EI
+RET
+
+
+IC:
+INR M  ;летягтгс диайопым
+MOV A,M
+
+RLC
+RLC
+RLC
+ANI F0H
+CMA
+STA 3000H
+
+RET
+
+END

@@ -1,0 +1,96 @@
+
+
+TABLES:
+
+CREATE table Doctor (
+  DoctorId int(6) UNSIGNED primary key,
+  FirstName varchar(30) not null,
+  LastName varchar(30) not null,
+  Speciality varchar(30) not null,
+  ExperienceYears int(3) UNSIGNED not null);
+
+  CREATE table Patient (
+  PatientId int(6) UNSIGNED PRIMARY KEY not null,
+  FirstName varchar(30) not null,
+  LastName varchar(30) not null,
+  Town varchar(30) not null,
+  StreetNumber varchar(30) not null,
+  Number varchar(30) not null,
+  PostalNumber varchar(30) not null,
+  Age int(3) UNSIGNED not null,
+  DoctorId int(6) UNSIGNED not null,
+  foreign key(DoctorId) REFERENCES Doctor(DoctorId)
+  on delete cascade);
+
+CREATE table PharmaceuticalCompany (
+  PharmaceuticalCompanyId int(6) UNSIGNED primary key,
+  Name varchar(30) not null,
+  PhoneNumber int(10) UNSIGNED not null
+  );
+
+CREATE table Drug (
+  DrugId int(6) UNSIGNED primary key,
+  Name varchar(30) not null,
+  Formula varchar(30) not null,
+  PharmaceuticalCompanyId int(6) UNSIGNED not null,
+  foreign key(PharmaceuticalCompanyId) REFERENCES PharmaceuticalCompany(PharmaceuticalCompanyId)
+  on delete cascade);
+
+CREATE table Pharmacy (
+  PharmacyId int(6) UNSIGNED primary key,
+  Name varchar(30) not null,
+  Town varchar(30) not null,
+  StreetName varchar(30) not null,
+  Number varchar(30) not null,
+  PostalCode varchar(30) not null,
+  PhoneNumber varchar(30) not null
+  );
+
+CREATE table Sell (
+  PharmacyId int(6) UNSIGNED not null,
+  DrugId int(6) UNSIGNED  not null,
+  primary key(PharmacyId,DrugId),
+  Price int(5) UNSIGNED not null,
+  foreign key(PharmacyId) REFERENCES Pharmacy(PharmacyId)
+  on delete cascade,
+  foreign key(DrugId) REFERENCES Drug(DrugId)
+  on delete cascade);
+
+CREATE table Prescription (
+  PatientId int(6) UNSIGNED not null,
+  DoctorId int(6) UNSIGNED not null,
+  DrugId int(6) UNSIGNED not null,
+  primary key(PatientId,DoctorId,DrugId),
+  Date varchar(30) not null,
+  Quantity int(3) not null,
+  foreign key(PatientId) REFERENCES Patient(PatientId)
+  on delete cascade,
+  foreign key(DoctorId) REFERENCES Doctor(DoctorId)
+  on delete cascade,
+  foreign key(DrugId) REFERENCES Drug(DrugId)
+  on delete cascade);
+
+CREATE table Contract (
+  PharmacyId int(6) UNSIGNED not null,
+  PharmaceuticalCompanyId int(6) UNSIGNED not null,
+  primary key(PharmacyId,PharmaceuticalCompanyId),
+  StartDate varchar(30) not null,
+  EndDate varchar(30) not null,
+  Text varchar(90) not null,
+  Supervisor varchar(30) not null,
+  foreign key(PharmacyId) REFERENCES Pharmacy(PharmacyId)
+  on delete cascade,
+  foreign key(PharmaceuticalCompanyId) REFERENCES PharmaceuticalCompany(PharmaceuticalCompanyId)
+  on delete cascade);
+
+
+Αρχικά ορίζουμε τα primary keys κατάλληλα ώστε κάθε record του εκάστοτε πίνακα να είναι μοναδικά προσπελάσιμο από έναν κωδικό. Σε μερικές περιπτώσεις αυτό γίνεται με composite Primay keys όπως πχ στο Prescription και Contract.
+΄Υστερα ορίζουμε τα ξένα κλειδιά και βεβαιονόμαστε ότι αν κάποιο record διαγραφεί τότε θα διαγραφούν και όλα όσα σχετίζονται με αυτό(με on delete cascade).
+Αν πχ διαγραφεί μία φαρμακευτική εταιρεία διαγράφονται τα φάρμακα που παρήγαγε καθώς επίσης και τα κατάλληλα records στο prescriptions,sells etc.
+Επίσης ορίζουμε τα γνωρίσματα ως not null αφού γενικά δημιουργούν προβλήματα οι null τιμές.  
+Τέλος ορίζουμε τον τύπο της κάθε μεταβλητής. Γενικά αυτός θα είναι varchar εκτός και αν θέλουμε να κάνουμε αριθμητικές πράξεις όπως πχ στην περίπτωση του Age για να βρούμε την μέση ηλικία των ασθενών οπότε ο τύπος θα είναι int. Τα primary keys γενικά σχεδιάζονται ως integers.
+
+
+
+
+

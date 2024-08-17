@@ -1,0 +1,451 @@
+.include "m16def.inc"
+
+.def mins=r16
+.def secs=r17
+.def count=r18    
+.def eisodos=r19
+.def dek=r20
+.def mon=r21
+.def temp=r22
+.def temp2=r23
+.def flag_timer=r26
+
+.org 0x0
+jmp reset
+
+.org 0x10
+jmp ISR_TIMER1_OVF
+
+reset:
+ldi r24 , low(RAMEND) ; initialize stack pointer
+out SPL , r24
+ldi r24 , high(RAMEND)
+out SPH , r24
+
+ldi r24 ,(1 << PC7) | (1 << PC6) | (1 << PC5) | (1 << PC4)  
+out DDRC ,r24  
+
+ser temp
+out ddrd,temp
+out ddrb,temp
+clr temp
+
+rcall lcd_init
+ldi r24 ,(1<<TOIE1) 
+out TIMSK ,r24 
+
+ldi r24,(1<<CS12)|(0<<CS11)|(1<<CS10)
+out TCCR1B,r24
+
+;+++++++++++++++++++++++++++++++++++++++++++
+;+++++++++++++++MAIN PROGRAM++++++++++++++++
+;+++++++++++++++++++++++++++++++++++++++++++
+
+;rcall arxiko_minima
+
+main:
+;rcall lcd_init
+ldi temp2,0x00
+
+;ldi r24,0x01
+;rcall lcd_data
+;ldi r24,5
+;rcall wait_msec
+
+start_screen:
+rcall lcd_init
+rcall arxiko_minima
+in eisodos,pina
+cpi eisodos,0x00
+breq start_screen
+
+
+clock:
+;********
+rcall lcd_init
+in eisodos,pina
+andi eisodos,0x80
+cpi eisodos,0x80
+brne continue
+rcall arxiko_minima
+jmp clock
+continue:
+in eisodos,pina
+cpi eisodos,0x01
+brne pause_clock
+jmp end_clock
+pause_clock:
+rcall lcd_init
+rcall print_same
+in eisodos,pina
+cpi eisodos,0x80
+breq clock
+cpi eisodos,0x00
+breq pause_clock
+end_clock:
+rcall lcd_init
+;start_clock:
+;in eisodos,pina
+;cpi eisodos,0x01
+;brne start_clock
+
+cpi flag_timer,0x01
+breq end_timer
+start_timer:
+ldi r24,0xE1   ;gia 1 second
+out TCNT1H,r24
+ldi r24,0x7B
+out TCNT1L,r24
+sei
+ldi flag_timer,0x01
+end_timer:
+
+;stand_by:
+;cpi temp2,0x01
+;brne stand_by
+
+mov temp,mins
+rcall conversion
+
+display_mins:
+ldi temp,0x30
+add temp,dek
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+
+ldi temp,0x30
+add temp,mon
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+
+ldi dek,0x00
+ldi mon,0x00
+
+rcall print_space
+rcall print_min
+rcall print_symbol
+
+mov temp,secs
+rcall conversion
+
+display_secs:
+ldi temp,0x30
+add temp,dek
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+
+ldi temp,0x30
+add temp,mon
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+
+rcall print_space
+rcall print_sec
+
+;pause_clock:
+;in eisodos,pina
+;cpi eisodos,0x00
+;breq pause_clock
+
+;reset_clock:                                                                                     
+;in eisodos,pina
+;cpi eisodos,0x80
+;brne skip
+;ldi mins,0x00
+;ldi secs,0x00
+;rcall arxiko_minima
+;jmp end_loop
+
+;skip:
+cpi temp2,0x01
+brne end_loop
+inc secs
+cpi secs,60
+brne end_loop
+ldi secs,0x00
+inc mins
+cpi mins,60
+brne end_loop
+ldi mins,0x00
+
+end_loop:
+cpi temp2,0x01
+brne pass
+ldi temp2,0x00
+pass:
+ldi r24,low(1000)
+ldi r25,high(1000)
+rcall wait_msec
+jmp clock
+
+;++++++++++++++++++++++++++++++++++++++++
+;++++++++++++++ROUTINES++++++++++++++++++
+;++++++++++++++++++++++++++++++++++++++++
+
+;***************
+; ARXIKO MINIMA
+;---------------
+arxiko_minima:
+ldi mins,0x00
+ldi secs,0x00
+;rcall lcd_init
+
+ldi r24,'0'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'0'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+rcall print_space
+rcall print_min
+rcall print_symbol
+ldi r24,'0'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'0'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+rcall print_space
+rcall print_sec
+ret
+
+;***************
+; PRINT ROUTINES
+;--------------
+; PRINT SAME
+print_same:
+mov temp,mins
+rcall conversion
+ldi temp,0x30
+add temp,dek
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi temp,0x30
+add temp,mon
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi dek,0x00
+ldi mon,0x00
+rcall print_space
+rcall print_min
+rcall print_symbol
+mov temp,secs
+rcall conversion
+ldi temp,0x30
+add temp,dek
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi temp,0x30
+;dec mon
+add temp,mon
+mov r24,temp
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+rcall print_space
+rcall print_sec
+
+ret
+;--------------
+; PRINT "MIN"
+print_min:
+ldi r24,'M'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'I'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'N'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ret
+;-------------
+; PRINT "SEC"
+print_sec:
+ldi r24,'S'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'E'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ldi r24,'C'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ret
+;-------------
+; PRINT ":"
+print_symbol:
+ldi r24,':'
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ret
+;-------------
+; PRINT " "
+print_space:
+ldi r24,' '
+rcall lcd_data
+ldi r24,5
+;rcall wait_msec
+ret
+;**************
+; LCD ROUTINES
+write_2_nibbles: 
+push r24         
+in r25 ,PIND       
+andi r25 ,0x0f  
+andi r24 ,0xf0        
+add r24 ,r25     
+out PORTD ,r24            
+sbi PORTD ,PD3   
+cbi PORTD ,PD3  
+pop r24                  
+swap r24  
+andi r24 ,0xf0   
+add r24 ,r25 
+out PORTD ,r24              
+sbi PORTD ,PD3  
+cbi PORTD ,PD3 
+ret
+;-------------
+lcd_data:                
+sbi PORTD ,PD2       
+rcall write_2_nibbles     
+ldi r24 ,43                
+ldi r25 ,0                   
+rcall wait_usec  
+ret
+;-------------
+lcd_command: 
+cbi PORTD ,PD2        
+rcall write_2_nibbles    
+ldi r24 ,39                   
+ldi r25 ,0                    
+rcall wait_usec          
+ret   
+;------------
+lcd_init:      
+ldi r24 ,40            
+ldi r25 ,0           
+rcall wait_msec      
+ldi r24 ,0x30          
+out PORTD ,r24                  
+sbi PORTD ,PD3        
+cbi PORTD ,PD3         
+ldi r24 ,39  
+ldi r25 ,0                      
+rcall wait_usec                                                  
+                         
+ldi r24 ,0x30         
+out PORTD ,r24       
+sbi PORTD ,PD3  
+cbi PORTD ,PD3  
+ldi r24 ,39  
+ldi r25 ,0  
+rcall wait_usec   
+ldi r24 ,0x20                   
+out PORTD ,r24          
+sbi PORTD ,PD3  
+cbi PORTD ,PD3  
+ldi r24 ,39  
+ldi r25 ,0  
+rcall wait_usec       
+ldi r24 ,0x28         
+rcall lcd_command      
+ldi r24 ,0x0c             
+rcall lcd_command       
+ldi r24 ,0x01              
+rcall lcd_command  
+ldi r24 ,low(1530)  
+ldi r25 ,high(1530)  
+rcall wait_usec      
+ldi r24 ,0x06             
+rcall lcd_command                                                                                       
+ret  
+
+wait_msec:
+push r24
+push r25
+ldi r24,low(998)
+ldi r25,high(998)
+rcall wait_usec
+pop r25
+pop r24
+sbiw r24,1
+brne wait_msec
+ret
+
+wait_usec:
+sbiw r24,1
+nop
+nop
+nop
+nop
+brne wait_usec
+ret
+;*******************
+; CONVERT TO DECIMAL
+conversion:
+
+find_dek:
+subi temp,10
+inc count
+cpi temp,0
+brpl find_dek
+dec count
+mov dek,count
+clr count
+ldi temp2,10
+add temp,temp2
+
+find_mon:
+subi temp,1
+inc count
+cpi temp,0
+brpl find_mon
+dec count
+mov mon,count
+clr count
+ldi temp2,1
+add temp,temp2
+clr temp
+
+ldi r24,0b00001100 ; display without cursor
+rcall lcd_command
+
+ret
+
+;+++++++++++++++++++++++++++++++++++++
+;+++++++++++++++TIMER+++++++++++++++++
+;+++++++++++++++++++++++++++++++++++++
+
+;**************
+; TIMER ROUTINE
+ISR_TIMER1_OVF:
+ldi temp2,0x01
+ldi flag_timer,0x00
+reti

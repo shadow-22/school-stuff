@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<?xml-stylesheet href="StyleSheet.xsl" type="text/xsl"?>
+<books>
+	<book title="The Wealth Of Nations">
+		<author>Adam Smith</author>
+		<price>120$</price>
+		<rating>10/10</rating>
+	</book>
+	<book title="Das Kapital">
+		<author>Karl Marx</author>
+		<price>150$</price>
+		<rating>5/10</rating>
+	</book>
+	<book title="The C Programming Language">
+		<author>Dennies Ritchie</author>
+		<price>90$</price>
+		<rating>8/10</rating>
+	</book>
+</books>

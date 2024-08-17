@@ -1,0 +1,5 @@
+Time taken by program for block size of 1 is : 0.206147 seconds
+Time taken by program for block size of 2 is : 0.135971 seconds
+Time taken by program for block size of 4 is : 0.112279 seconds
+Time taken by program for block size of 8 is : 0.111692 seconds
+Time taken by program for block size of 16 is : 0.102178 seconds

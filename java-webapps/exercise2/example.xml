@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library>
+<library id="second">
+	hello
+	<math class="second" lame="yes">
+		<algebra>
+			<book1>
+				<title>Algebra First Book</title>
+				<price>153</price>
+				<rating>9/10</rating>
+			</book1>
+			<book2>
+				<title basic="yea">Algebra Second Book</title>
+				<price>123</price>
+				<rating>5/10</rating>
+			</book2>
+			<book3>
+				<title>Algebra Third Book</title>
+				<price>198</price>
+				<rating>10/10</rating>
+			</book3>
+		</algebra>
+		<geometry>
+			<book1>
+				<title>Geometry First Book</title>
+				<price>100</price>
+				<rating>9/10</rating>
+			</book1>
+			<book2>
+				<title>Geometry Second Book</title>
+				<price>95</price>
+				<rating>7/10</rating>
+			</book2>
+			<book3>
+				<title>Geometry Third Book</title>
+				<price>150</price>
+				<rating>10/10</rating>
+			</book3>
+		</geometry>
+		<trigonometry>
+			<book1>
+				<title>Trigonometry First Book</title>
+				<price>51</price>
+				<rating>7/10</rating>
+			</book1>
+			<book2>
+				<title>Trigonometry Second Book</title>
+				<price>78</price>
+				<rating>6/10</rating>
+			</book2>
+			<book3>
+				<title>Trigonometry Third Book</title>
+				<price>85</price>
+				<rating>8/10</rating>
+			</book3>
+		</trigonometry>
+	</math>
+	<programming>
+		<java>
+			<book1>
+				<title>Java First Book</title>
+				<price>70</price>
+				<rating>8/10</rating>
+			</book1>
+			<book2>
+				<title>Java Second Book</title>
+				<price>50</price>
+				<rating>5/10</rating>
+			</book2>
+			<book3>
+				<title>Java Third Book</title>
+				<price>130</price>
+				<rating>10/10</rating>
+			</book3>
+		</java>
+		<c>
+			<book1>
+				<title>C First Book</title>
+				<price>80</price>
+				<rating>9/10</rating>
+			</book1>
+			<book2>
+				<title>C Second Book</title>
+				<price>62</price>
+				<rating>7/10</rating>
+			</book2>
+			<book3>
+				<title>C Third Book</title>
+				<price>120</price>
+				<rating>9/10</rating>
+			</book3>
+		</c>
+		<python>
+			<book1>
+				<title>Python First Book</title>
+				<price>68</price>
+				<rating>8/10</rating>
+			</book1>
+			<book2>
+				<title>Python Second Book</title>
+				<price>74</price>
+				<rating>7/10</rating>
+			</book2>
+			<book3>
+				<title>Python Third Book</title>
+				<price>150</price>
+				<rating>10/10</rating>
+			</book3>
+		</python>
+	</programming>
+</library>

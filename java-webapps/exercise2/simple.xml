@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+	<head>
+		<title>This is the title</title>
+	</head>
+	<body>
+		<div id="myid">
+			<p font-size="12px">This is a paragraph</p>
+		</div>
+	</body>
+</html>

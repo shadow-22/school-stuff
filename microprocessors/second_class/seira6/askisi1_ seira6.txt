@@ -1,0 +1,87 @@
+.include "m16def.inc"
+.def led=r16
+
+reset:
+ldi r24,low(ramend)
+out spl,r24
+ldi r24,high(ramend)
+out sph,r24
+
+ser r17
+out ddra,r17
+ldi r17,0xfe
+out ddrb,r17
+
+
+ldi led,0x80
+
+
+
+right:
+out porta,led
+in r21,pinb
+cpi r21,1
+breq right
+ldi r24,low(500)
+ldi r25,high(500)
+rcall wait_msec
+clc
+ror led
+cpi led,0x01
+brne right
+
+
+left:
+in r21,pinb
+cpi r21,1
+breq left
+out porta,led
+out porta,led
+ldi r24,low(500)
+ldi r25,high(500)
+rcall wait_msec
+clc
+rol led
+cpi led,0x80
+brne left
+rjmp right
+
+
+
+
+wait_msec:
+push r24
+push r25
+ldi r24,low(998)
+ldi r25,high(998)
+rcall wait_usec
+pop r25
+pop r24
+sbiw r24,1
+brne wait_msec
+ret
+
+wait_usec:
+sbiw r24,1
+nop
+nop
+nop
+nop
+brne wait_usec
+ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

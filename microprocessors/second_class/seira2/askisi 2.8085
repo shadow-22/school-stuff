@@ -1,0 +1,26 @@
+ORG 0800H
+IN 10H
+MVI B,00H
+
+START:
+LXI H,0B00H
+
+CALL KIND ;йыдийос йоулпиоу стом а
+MOV M,A   ;летайимгсг стг хесг лмглгс 0б00г
+INX H     ;/елжамисг лгдемийоу стгбм 2Г хесг тгс охомгс
+MVI M,00H ;/
+INX H     ;/елжамисг йемоу стис упокоипес хесеис
+MVI M,10H
+INX H
+MVI M,10H
+INX H
+MVI M,10H
+INX H
+MVI M,10H ;/
+
+LXI D,0B00H
+CALL STDM
+CALL DCD
+JMP START
+
+END

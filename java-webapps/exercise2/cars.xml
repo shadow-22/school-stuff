@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<cars>
+	<car year="1996" make="Land Rover" model="Discovery">
+		<mileage>36500</mileage>
+		<color>black</color>
+		<price>$22100</price>
+	</car>
+	<car year="1998" make="Land Rover" model="Discovery">
+		<mileage>3550</mileage>
+		<color>red</color>
+		<price>$31995</price>
+	</car>
+	<car year="1996" make="Chevrolet" model="Suburban 2500">
+		<mileage>49300</mileage>
+		<color>green</color>
+		<price>$25995</price>
+	</car>
+</cars>

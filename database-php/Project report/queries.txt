@@ -1,0 +1,50 @@
+QUERIES:
+
+SELECT PatientId, FirstName, LastName, Town, 
+                   StreetNumber, PostalNumber, Number, Age,
+                   DoctorId
+            FROM Patient
+            WHERE PatientId = '$searchID'
+
+SELECT PharmacyId, Name, Town, StreetName,
+	               Number, PostalCode, PhoneNumber
+	        FROM Pharmacy
+	        WHERE Town = '$searchtown' 
+
+SELECT PhoneNumber
+            FROM PharmaceuticalCompany
+            WHERE PharmaceuticalCompanyId = '$searchID'
+
+SELECT AVG(Age)
+        AS avg_age
+        FROM Patient
+
+SELECT Speciality, AVG(ExperienceYears) AS Avg_Exp
+        FROM Doctor
+        GROUP BY Speciality
+
+SELECT DoctorId,FirstName,LastName,Speciality,ExperienceYears
+        FROM Doctor
+        ORDER BY ExperienceYears desc
+
+SELECT Speciality,AVG(ExperienceYears) AS Avg_Exp
+        FROM Doctor
+        GROUP BY Speciality
+        HAVING AVG(ExperienceYears) >= 20
+
+SELECT FirstName,LastName,Name
+        FROM Patient NATURAL JOIN Prescription NATURAL JOIN Drug
+        WHERE PatientId = '$searchID'
+
+SELECT Pharmacy.Name AS PhName,Drug.Name AS DName
+        FROM Pharmacy,Sell,Drug 
+        WHERE Pharmacy.PharmacyId = '$searchID'
+        AND Pharmacy.PharmacyId = Sell.PharmacyId
+        AND Sell.DrugId = Drug.DrugId
+
+SELECT First,Last
+        FROM 
+       (SELECT FirstName AS First,LastName AS Last,Speciality AS Spec,ExperienceYears AS Exp       
+        FROM Doctor
+        WHERE ExperienceYears >= 30) as Table1
+        WHERE Spec = 'Cardiology'                                                            	                   

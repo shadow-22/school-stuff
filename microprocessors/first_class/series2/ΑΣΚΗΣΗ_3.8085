@@ -1,0 +1,65 @@
+ORG 0800H
+
+START:
+LDA 2000H   ;кгьг еисодоу
+RLC         ;/аполомысг бит-7
+ANI 01H     ;/
+MOV B,A     ; (0000000а3)
+LDA 2000H
+RLC         ;/аполомысг бит-6
+RLC         ;/
+ANI 01H     ;/(0000000B3)
+ANA B       ; (0000000X3)
+RLC
+RLC
+RLC         ; (0000X3000)
+MOV C,A     ; C <--- (0000X3000)
+
+LDA 2000H
+RLC         ;/аполомысг бит-5
+RLC         ;/
+RLC         ;/
+ANI 01H     ;/
+MOV B,A     ; (0000000а2)
+LDA 2000H
+RLC         ;/аполомысг бит-4
+RLC         ;/
+RLC         ;/
+RLC         ;/
+ANI 01H     ;/(0000000B2)
+ANA B       ; (0000000X2)
+RLC
+RLC         ; (00000X200)
+ORA C
+MOV C,A     ; C <--- (0000X3X200)
+
+LDA 2000H
+RRC         ;/аполомысг бит-3
+RRC         ;/
+RRC         ;/
+ANI 01H     ;/
+MOV B,A     ; (0000000а1)
+LDA 2000H
+RRC         ;/аполомысг бит-2
+RRC         ;/
+ANI 01H     ;/(0000000B1)
+ORA B       ; (0000000X1)
+MOV D,A     ; D <--- (0000000X1)
+RLC         ; (000000X10)
+ORA C
+MOV C,A     ; C <--- (0000X3X2X10)
+
+LDA 2000H
+RRC         ;/аполомысг бит-1
+ANI 01H     ;/
+MOV B,A     ; (0000000A0)
+LDA 2000H
+ANI 01H     ;аполомысг бит-0,  (0000000B0)
+ORA B       ; (0000000Y0)  
+XRA D       ; (0000000X0)
+ORA C       ; (0000X3X2X1X0)
+
+CMA
+STA 3000H
+JMP START
+END
